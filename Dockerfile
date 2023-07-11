@@ -1,30 +1,27 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
-RUN apt-get update
-
-RUN curl -sL https://deb.nodesource.com/setup_16.x  | bash -
-
-RUN apt-get -y install nodejs
+RUN apt-get update && \
+    curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get -y install nodejs
 
 COPY . ./
-RUN dotnet restore
-
-RUN dotnet build "dotnet6.csproj" -c Release
-
-RUN dotnet publish "dotnet6.csproj" -c Release -o publish
+RUN dotnet restore && \
+    dotnet build "dotnet6.csproj" -c Release && \
+    dotnet publish "dotnet6.csproj" -c Release -o publish
 
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-
+WORKDIR /app
 COPY --from=build /app/publish .
+
 ENV ASPNETCORE_URLS http://*:5000
 
-RUN groupadd -r redbull && \
-    useradd -r -g redbull -s /bin/false redbull && \
-    chown -R redbull:redbull /app
+RUN groupadd -r sujan && \
+    useradd -r -g sujan -s /bin/false sujan && \
+    chown -R sujan:sujan /app
 
-USER redbull
+USER sujan 
 
-EXPOSE 80
+EXPOSE 5000
 ENTRYPOINT ["dotnet", "dotnet6.dll"]
