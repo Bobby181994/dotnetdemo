@@ -26,5 +26,5 @@ RUN groupadd -r redbull && \
 
 USER redbull
 
-EXPOSE 5000
+EXPOSE 80
 ENTRYPOINT ["dotnet", "dotnet6.dll"]
