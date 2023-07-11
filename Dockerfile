@@ -2,7 +2,9 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
 RUN apt-get update
+
 RUN curl -sL https://deb.nodesource.com/setup_16.x  | bash -
+
 RUN apt-get -y install nodejs
 
 COPY . ./
@@ -17,6 +19,12 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 
 COPY --from=build /app/publish .
 ENV ASPNETCORE_URLS http://*:5000
+
+RUN groupadd -r redbull && \
+    useradd -r -g redbull -s /bin/false redbull && \
+    chown -R redbull:redbull /app
+
+USER redbull
 
 EXPOSE 5000
 ENTRYPOINT ["dotnet", "dotnet6.dll"]
