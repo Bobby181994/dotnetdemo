@@ -9,7 +9,7 @@ trigger:
 - master
 
 pool:
-  name: 'Demo'
+  name: 'sujan'
 
 variables:
   buildConfiguration: 'Release'
@@ -45,7 +45,7 @@ stages:
   - deployment: Deploy
     displayName: Deploy to AKS
     pool:
-      name: 'Demo'   
+      name: 'sujan'   
     environment: 'Dev'
     strategy:
       runOnce:
